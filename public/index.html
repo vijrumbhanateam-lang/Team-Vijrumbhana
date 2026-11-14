@@ -1,243 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Team Vijrumbhana</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Vijrumbhana</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+}
 
-    header {
-      background: linear-gradient(135deg, #0f172a, #1d4ed8);
-      color: white;
-      text-align: center;
-      padding: 35px 15px;
-    }
+header {
+  background: linear-gradient(135deg, #0f172a, #1d4ed8);
+  color: white;
+  text-align: center;
+  padding: 40px 15px;
+}
 
-    header h1 {
-      margin: 0;
-      font-size: 32px;
-    }
+header h1 {
+  margin: 0;
+  font-size: 32px;
+}
 
-    header p {
-      margin-bottom: 0;
-    }
+header p {
+  margin-top: 10px;
+}
 
-    nav {
-      background: #0f172a;
-      text-align: center;
-      padding: 12px;
-    }
+nav {
+  background: #ffffff;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 8px #ddd;
+}
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-    }
+nav a {
+  display: inline-block;
+  margin: 8px;
+  padding: 12px 18px;
+  text-decoration: none;
+  color: #1d4ed8;
+  font-weight: bold;
+  border-radius: 8px;
+}
 
-    .container {
-      max-width: 850px;
-      margin: 25px auto;
-      padding: 15px;
-    }
+nav a:hover {
+  background: #dbeafe;
+}
 
-    .card {
-      background: white;
-      padding: 25px;
-      margin-bottom: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px #00000010;
-    }
+main {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
 
-    h2 {
-      color: #1d4ed8;
-      margin-top: 0;
-    }
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px #ddd;
+}
 
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
+.card h2 {
+  color: #1d4ed8;
+}
 
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 15px;
-    }
+.buttons {
+  margin-top: 25px;
+}
 
-    button {
-      background: #1d4ed8;
-      color: white;
-      border: none;
-      padding: 13px 20px;
-      margin-top: 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      width: 100%;
-    }
+.buttons a {
+  display: block;
+  margin: 15px auto;
+  padding: 16px;
+  max-width: 350px;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+}
 
-    button:hover {
-      background: #1e40af;
-    }
+.buttons a:hover {
+  background: #1e40af;
+}
 
-    .message {
-      margin-top: 12px;
-      font-weight: bold;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #0f172a;
-      color: white;
-    }
-  </style>
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+}
+</style>
 </head>
 
 <body>
 
 <header>
   <h1>TEAM VIJRUMBHANA</h1>
-  <p>Membership & Community Service Portal</p>
+  <p>Community Service & Public Welfare Portal</p>
 </header>
 
 <nav>
-  <a href="#membership">Membership</a>
-  <a href="#complaint">Submit Complaint</a>
-  <a href="/admin.html">Admin</a>
+  <a href="/">Home</a>
+  <a href="/membership.html">Membership</a>
+  <a href="/complaint.html">Submit Complaint</a>
+  <a href="/admin.html">Admin Login</a>
 </nav>
 
-<div class="container">
+<main>
+  <div class="card">
+    <h2>Welcome to Team Vijrumbhana</h2>
+    <p>
+      Join our community and contribute towards a better society.
+      Register as a member or submit your public service complaints
+      through our online portal.
+    </p>
 
-  <section class="card" id="membership">
-    <h2>Membership Registration</h2>
-
-    <form id="membershipForm">
-      <label>Full Name</label>
-      <input name="name" required>
-
-      <label>Mobile Number</label>
-      <input name="mobile" type="tel" pattern="[0-9]{10}" required>
-
-      <label>Email Address</label>
-      <input name="email" type="email">
-
-      <label>Address</label>
-      <textarea name="address" required></textarea>
-
-      <label>Membership Type</label>
-      <select name="role" required>
-        <option value="">Select Membership</option>
-        <option>General Member</option>
-        <option>Volunteer</option>
-        <option>Supporter</option>
-      </select>
-
-      <button type="submit">Register Membership</button>
-      <div class="message" id="membershipMessage"></div>
-    </form>
-  </section>
-
-  <section class="card" id="complaint">
-    <h2>Submit a Complaint</h2>
-
-    <form id="complaintForm">
-      <label>Full Name</label>
-      <input name="name" required>
-
-      <label>Mobile Number</label>
-      <input name="mobile" type="tel" pattern="[0-9]{10}" required>
-
-      <label>Complaint Category</label>
-      <select name="category" required>
-        <option value="">Select Category</option>
-        <option>Water Supply</option>
-        <option>Roads</option>
-        <option>Electricity</option>
-        <option>Sanitation</option>
-        <option>Other</option>
-      </select>
-
-      <label>Complaint Description</label>
-      <textarea name="description" required></textarea>
-
-      <button type="submit">Submit Complaint</button>
-      <div class="message" id="complaintMessage"></div>
-    </form>
-  </section>
-
-</div>
+    <div class="buttons">
+      <a href="/membership.html">Register as Member</a>
+      <a href="/complaint.html">Submit a Complaint</a>
+      <a href="/admin.html">Admin Login</a>
+    </div>
+  </div>
+</main>
 
 <footer>
-  © 2026 Team Vijrumbhana | Community Service Portal
+  © Team Vijrumbhana | Community Service Portal
 </footer>
-
-<script>
-  async function submitForm(formId, endpoint, messageId, successMessage) {
-    const form = document.getElementById(formId);
-    const message = document.getElementById(messageId);
-
-    form.addEventListener("submit", async function(event) {
-      event.preventDefault();
-
-      message.textContent = "Submitting...";
-      message.style.color = "#1d4ed8";
-
-      const data = Object.fromEntries(new FormData(form));
-
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          throw new Error(result.message || "Submission failed");
-        }
-
-        message.textContent = successMessage;
-        message.style.color = "green";
-        form.reset();
-
-      } catch (error) {
-        message.textContent = error.message || "Unable to submit. Please try again.";
-        message.style.color = "red";
-      }
-    });
-  }
-
-  submitForm(
-    "membershipForm",
-    "/api/membership",
-    "membershipMessage",
-    "Membership registered successfully!"
-  );
-
-  submitForm(
-    "complaintForm",
-    "/api/complaint",
-    "complaintMessage",
-    "Complaint submitted successfully!"
-  );
-</script>
 
 </body>
 </html>
