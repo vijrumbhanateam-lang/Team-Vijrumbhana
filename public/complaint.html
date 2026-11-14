@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Vijrumbhana - Complaint</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef2f8;
+    color: #172033;
+}
+
+header {
+    background: linear-gradient(120deg, #101b35, #2454d5);
+    color: white;
+    text-align: center;
+    padding: 35px 15px;
+}
+
+nav {
+    background: #101b35;
+    padding: 15px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 850px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px #0001;
+}
+
+h2 { color: #2454d5; }
+
+label {
+    display: block;
+    margin-top: 18px;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    border: 1px solid #ccd3df;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    background: #2454d5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+button:hover { background: #183fae; }
+
+#message {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+footer {
+    background: #101b35;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>TEAM VIJRUMBHANA</h1>
+    <p>Complaint Submission Portal</p>
+</header>
+
+<nav>
+    <a href="/">Home</a>
+    <a href="/membership.html">Membership</a>
+    <a href="/complaint.html">Submit Complaint</a>
+    <a href="/admin.html">Admin</a>
+</nav>
+
+<div class="container">
+<div class="card">
+
+<h2>Submit Your Complaint</h2>
+
+<form id="complaintForm">
+
+<label>Full Name</label>
+<input type="text" name="name" required>
+
+<label>Mobile Number</label>
+<input type="tel" name="mobile" pattern="[0-9]{10}" maxlength="10" required>
+
+<label>Complaint Category</label>
+<select name="category" required>
+<option value="">Select Category</option>
+<option>Roads</option>
+<option>Water</option>
+<option>Sanitation</option>
+<option>Electricity</option>
+<option>Drainage</option>
+<option>Public Services</option>
+<option>Other</option>
+</select>
+
+<label>Complaint Description</label>
+<textarea name="description" rows="5" required></textarea>
+
+<button type="submit">Submit Complaint</button>
+
+</form>
+
+<div id="message"></div>
+
+</div>
+</div>
+
+<footer>
+© 2026 Team Vijrumbhana | Community Service Portal
+</footer>
+
+<script>
+document.getElementById("complaintForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const message = document.getElementById("message");
+    const button = this.querySelector("button");
+
+    button.disabled = true;
+    button.textContent = "Submitting...";
+    message.textContent = "";
+
+    const data = Object.fromEntries(new FormData(this));
+
+    try {
+        const response = await fetch("/api/complaint", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            message.style.color = "green";
+            message.textContent = "Complaint submitted successfully!";
+            this.reset();
+        } else {
+            message.style.color = "red";
+            message.textContent = result.message || "Complaint submission failed.";
+        }
+    } catch (error) {
+        message.style.color = "red";
+        message.textContent = "Server error. Please try again.";
+    }
+
+    button.disabled = false;
+    button.textContent = "Submit Complaint";
+});
+</script>
+
+</body>
+</html>
