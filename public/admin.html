@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Vijrumbhana Admin</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 25px auto;
+      padding: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px #00000010;
+    }
+
+    input {
+      padding: 12px;
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background: #1d4ed8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button:hover { background: #1e40af; }
+
+    .danger { background: #dc2626; }
+
+    .hidden { display: none; }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th { background: #e2e8f0; }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .message { margin-top: 12px; }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>TEAM VIJRUMBHANA</h1>
+  <p>Administrator Dashboard</p>
+</header>
+
+<div class="container">
+
+  <section class="card" id="loginSection">
+    <h2>Admin Login</h2>
+
+    <form id="loginForm">
+      <input type="password" id="password" placeholder="Admin Password" required>
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="message" id="loginMessage"></div>
+  </section>
+
+  <section class="hidden" id="dashboard">
+
+    <div class="card">
+      <button onclick="loadMemberships()">Memberships</button>
+      <button onclick="loadComplaints()">Complaints</button>
+      <button onclick="logout()" class="danger">Logout</button>
+    </div>
+
+    <div class="card">
+      <h2 id="tableTitle">Records</h2>
+      <button onclick="refreshRecords()">Refresh</button>
+      <button onclick="exportCSV()">Export CSV</button>
+      <div id="recordsMessage"></div>
+
+      <div class="table-container">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+  let currentType = "memberships";
+
+  const loginForm = document.getElementById("loginForm");
+  const loginMessage = document.getElementById("loginMessage");
+
+  loginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: document.getElementById("password").value
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Login failed");
+      }
+
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+
+      loadMemberships();
+
+    } catch (error) {
+      loginMessage.textContent = "Invalid password. Please try again.";
+      loginMessage.style.color = "red";
+    }
+  });
+
+  async function loadMemberships() {
+    currentType = "memberships";
+    document.getElementById("tableTitle").textContent = "Membership Records";
+    await loadRecords();
+  }
+
+  async function loadComplaints() {
+    currentType = "complaints";
+    document.getElementById("tableTitle").textContent = "Complaint Records";
+    await loadRecords();
+  }
+
+  async function refreshRecords() {
+    await loadRecords();
+  }
+
+  async function loadRecords() {
+    const message = document.getElementById("recordsMessage");
+    const head = document.getElementById("tableHead");
+    const body = document.getElementById("tableBody");
+
+    message.textContent = "Loading records...";
+    head.innerHTML = "";
+    body.innerHTML = "";
+
+    try {
+      const response = await fetch("/api/admin/" + currentType);
+
+      if (response.status === 401) {
+        throw new Error("Session expired. Please login again.");
+      }
+
+      const records = await response.json();
+
+      if (!response.ok || !Array.isArray(records)) {
+        throw new Error("Unable to load records");
+      }
+
+      if (!records.length) {
+        message.textContent = "No records found.";
+        return;
+      }
+
+      const columns = Object.keys(records[0]);
+
+      head.innerHTML = "<tr>" +
+        columns.map(column => "<th>" + column + "</th>").join("") +
+        "<th>Update Status</th></tr>";
+
+      records.forEach(record => {
+        const row = document.createElement("tr");
+
+        columns.forEach(column => {
+          const cell = document.createElement("td");
+          cell.textContent = record[column] ?? "";
+          row.appendChild(cell);
+        });
+
+        const statusCell = document.createElement("td");
+        const select = document.createElement("select");
+
+        ["Pending", "Approved", "Rejected", "Resolved"].forEach(status => {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+
+          if (record.Status === status) {
+            option.selected = true;
+          }
+
+          select.appendChild(option);
+        });
+
+        const updateButton = document.createElement("button");
+        updateButton.textContent = "Update";
+
+        updateButton.onclick = () => updateStatus(
+          record.ID,
+          select.value
+        );
+
+        statusCell.appendChild(select);
+        statusCell.appendChild(updateButton);
+        row.appendChild(statusCell);
+
+        body.appendChild(row);
+      });
+
+      message.textContent = records.length + " records loaded.";
+
+    } catch (error) {
+      message.textContent = error.message;
+      message.style.color = "red";
+    }
+  }
+
+  async function updateStatus(id, status) {
+    try {
+      const response = await fetch("/api/admin/status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: currentType,
+          id,
+          status
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Update failed");
+      }
+
+      alert("Status updated successfully!");
+      loadRecords();
+
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  function exportCSV() {
+    window.location.href = "/api/admin/export/" + currentType;
+  }
+
+  async function logout() {
+    await fetch("/api/admin/logout", { method: "POST" });
+    location.reload();
+  }
+</script>
+
+</body>
+</html>
